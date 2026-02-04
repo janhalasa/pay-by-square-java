@@ -81,7 +81,42 @@ public class PayBySquareGeneratorTest {
         // Generate PNG image
         byte[] qrImage = generator.generateQrCode(doc, 256); // 256x256 pixels
         assertNotNull(qrImage);
-        // System.out.println("PayBySquare String: " + stringCode);
+        // java.nio.file.Files.write(java.nio.file.Path.of("paybysquare.png"), qrImage);
+    }
+
+    @Test
+    public void givenSimplePaymentOptions_whenGenerate_thenQrCodeGenerated() throws Exception {
+        // 1. Create the Document
+        PayBySquareDocument doc = new PayBySquareDocument();
+        doc.setBeneficiaryName("Ján Halaša");
+
+        // 2. Create a Payment
+        Payment payment = new Payment();
+        payment.setAmount(new BigDecimal("123.45"));
+        payment.setPaymentDueDate(LocalDate.now());
+        payment.setVariableSymbol("1234567890");
+        payment.setConstantSymbol("0008");
+        payment.setSpecificSymbol("9999");
+
+        // 3. Add Bank Account (IBAN & BIC)
+        BankAccount account = new BankAccount();
+        account.setIban("SK3883300000002503144937");
+        account.setBic("FIOZSKBAXXX");
+        payment.addBankAccount(account);
+
+        // Add the payment to the document
+        doc.addPayment(payment);
+
+        // 6. Generate the QR Code
+        PayBySquareGenerator generator = new PayBySquareGenerator();
+
+        // Generate raw PayBySquare string (LZMA compressed, Base32hex encoded)
+        String stringCode = generator.generateString(doc);
+        assertNotNull(stringCode);
+
+        // Generate PNG image
+        byte[] qrImage = generator.generateQrCode(doc, 256); // 256x256 pixels
+        assertNotNull(qrImage);
         // java.nio.file.Files.write(java.nio.file.Path.of("paybysquare.png"), qrImage);
     }
 }

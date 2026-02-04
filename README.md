@@ -184,6 +184,7 @@ public class FullExample {
 
 Since the library supports just generation of QR codes, it's a bit hard to verify the result in a JUnit test.
 So it's necessary to test the result in an existing bank application or another PayBySquare library.
+I used the [pbsq-sk](https://github.com/klokain/pbsq-sk) JavaScript library to verify the results (not all fields, just basic ones).
 
 ## Standard Compliance
 - **Version**: [1.1.0](https://www.sbaonline.sk/wp-content/uploads/2020/03/pay-by-square-specifications-1_1_0.pdf)
