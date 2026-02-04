@@ -13,6 +13,8 @@ This library provides an implementation of the PayBySquare standard, including:
 
 Reading the resulting QR code or the string it represents, is not implemented (yet).
 
+The library does not validate values set from the business perspective, so if not sure, consult [the standard](https://www.sbaonline.sk/wp-content/uploads/2020/03/pay-by-square-specifications-1_1_0.pdf). 
+
 ## Installation
 
 Add the following dependencies to your `pom.xml`:
@@ -39,9 +41,7 @@ This is what most people need. It creates a template for a payment identified by
 
 ```java
 
-import io.github.janhalasa.paybysquare.model.BankAccount;
-import io.github.janhalasa.paybysquare.model.PayBySquareDocument;
-import io.github.janhalasa.paybysquare.model.Payment;
+import io.github.janhalasa.paybysquare.model.*;
 import io.github.janhalasa.paybysquare.service.PayBySquareGenerator;
 
 import java.nio.file.Files;
@@ -57,9 +57,7 @@ public class OneTimePayment {
 
         // 2. Create a Payment
         Payment payment = new Payment();
-        payment.setPaymentOptions(1); // Standard payment
         payment.setAmount(123.45);
-        payment.setCurrencyCode("EUR");
         payment.setVariableSymbol("1234567890");
 
         // 3. Add Bank Account (IBAN & BIC)
@@ -88,11 +86,7 @@ Some combinantions may not make sense, so it's good to verify how bank apps proc
 
 ```java
 
-import io.github.janhalasa.paybysquare.model.BankAccount;
-import io.github.janhalasa.paybysquare.model.DirectDebit;
-import io.github.janhalasa.paybysquare.model.PayBySquareDocument;
-import io.github.janhalasa.paybysquare.model.Payment;
-import io.github.janhalasa.paybysquare.model.StandingOrder;
+import io.github.janhalasa.paybysquare.model.*;
 import io.github.janhalasa.paybysquare.service.PayBySquareGenerator;
 
 import java.nio.file.Files;
@@ -111,9 +105,9 @@ public class FullExample {
 
         // 2. Create a Payment
         Payment payment = new Payment();
-        payment.setPaymentOptions(1); // Standard payment
+        payment.setPaymentOptions(PaymentOption.PAYMENT_ORDER); // This is the default value, not necessary to be set
         payment.setAmount(123.45);
-        payment.setCurrencyCode("EUR");
+        payment.setCurrencyCode(Payment.CURRENCY_EUR); // This is the default value, not necessary to be set
         payment.setPaymentDueDate(LocalDate.now());
         payment.setVariableSymbol("1234567890");
         payment.setConstantSymbol("0308");
@@ -131,15 +125,15 @@ public class FullExample {
         // 4. (Optional) Add Standing Order details
         StandingOrder so = new StandingOrder();
         so.setDay(15);
-        so.setMonth(1); // Every month (1) or specific month? Check standard. Usually interval.
-        so.setPeriodicity("M"); // Monthly
+        so.setMonth(MonthClassifier.APRIL);
+        so.setPeriodicity(Periodicity.MONTHLY); // Monthly
         so.setLastDate(LocalDate.of(2027, 12, 1));
         payment.setStandingOrder(so);
 
         // 5. (Optional) Add Direct Debit details
         DirectDebit dd = new DirectDebit();
-        dd.setDirectDebitScheme(1);
-        dd.setDirectDebitType(1);
+        dd.setDirectDebitScheme(DirectDebitScheme.SEPA);
+        dd.setDirectDebitType(DirectDebitType.ONE_OFF);
         dd.setVariableSymbol("1234567890");
         dd.setSpecificSymbol("1111");
         dd.setOriginatorsReference("MANDATE-001");

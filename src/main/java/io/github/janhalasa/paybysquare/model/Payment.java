@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Payment {
-    private Integer paymentOptions = 1; // Default
+
+    public static final String CURRENCY_EUR = "EUR";
+
+    private PaymentOption paymentOptions = PaymentOption.PAYMENT_ORDER; // Default
     private Double amount;
-    private String currencyCode;
+    private String currencyCode = CURRENCY_EUR;
     private LocalDate paymentDueDate;
     private String variableSymbol;
     private String constantSymbol;
@@ -18,11 +21,11 @@ public class Payment {
     private StandingOrder standingOrder;
     private DirectDebit directDebit;
 
-    public Integer getPaymentOptions() {
+    public PaymentOption getPaymentOptions() {
         return paymentOptions;
     }
 
-    public void setPaymentOptions(Integer paymentOptions) {
+    public void setPaymentOptions(PaymentOption paymentOptions) {
         this.paymentOptions = paymentOptions;
     }
 

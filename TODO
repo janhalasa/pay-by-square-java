@@ -1,18 +1,6 @@
-so.setPeriodicity("M"); - constant or something
-payment.setPaymentOptions(1); // Standard payment - constant or something
-
-payment.setCurrencyCode("EUR"); - constant
-
-// Improve
-so.setDay(15);
-so.setMonth(1); // Every month (1) or specific month? Check standard. Usually interval.
-
-// Improve
-dd.setDirectDebitScheme(1);
-dd.setDirectDebitType(1);
 
 // Ceny nie ako double - BigDecimal
 payment.setAmount(123.45);
 dd.setMaxAmount(500.00);
 
-// Default hodnoty - standard payment, EUR currency
+// Vyhodiť zbytočné komentáre

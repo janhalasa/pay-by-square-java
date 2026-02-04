@@ -60,7 +60,7 @@ public class PayBySquareSerializer {
 
     private void serializePayment(StringBuilder sb, Payment payment) {
         // 3. PaymentOptions (Int, 1..1)
-        appendInt(sb, payment.getPaymentOptions());
+        appendInt(sb, payment.getPaymentOptions().getCode());
 
         // 4. Amount (Decimal, 1..1)
         appendDecimal(sb, payment.getAmount());
@@ -124,18 +124,18 @@ public class PayBySquareSerializer {
         // 16. Day (Int, 1..1)
         appendInt(sb, so.getDay());
         // 17. Month (Int, 1..1)
-        appendInt(sb, so.getMonth());
+        appendInt(sb, so.getMonth() == null ? null : so.getMonth().code());
         // 18. Periodicity (String, 1..1)
-        appendString(sb, so.getPeriodicity());
+        appendString(sb, so.getPeriodicity() == null ? null : so.getPeriodicity().code());
         // 19. LastDate (Date, 1..1)
         appendDate(sb, so.getLastDate());
     }
 
     private void serializeDirectDebit(StringBuilder sb, DirectDebit dd) {
         // 21. DirectDebitScheme (Int, 1..1)
-        appendInt(sb, dd.getDirectDebitScheme());
+        appendInt(sb, dd.getDirectDebitScheme() == null ? null : dd.getDirectDebitScheme().code());
         // 22. DirectDebitType (Int, 1..1)
-        appendInt(sb, dd.getDirectDebitType());
+        appendInt(sb, dd.getDirectDebitType() == null ? null : dd.getDirectDebitType().code());
         // 23. VariableSymbol (String, 0..1)
         appendString(sb, dd.getVariableSymbol());
         // 24. SpecificSymbol (String, 0..1)

@@ -3,8 +3,8 @@ package io.github.janhalasa.paybysquare.model;
 import java.time.LocalDate;
 
 public class DirectDebit {
-    private Integer directDebitScheme;
-    private Integer directDebitType;
+    private DirectDebitScheme directDebitScheme;
+    private DirectDebitType directDebitType;
     private String variableSymbol;
     private String specificSymbol;
     private String originatorsReference;
@@ -14,19 +14,19 @@ public class DirectDebit {
     private Double maxAmount;
     private LocalDate validTillDate;
 
-    public Integer getDirectDebitScheme() {
+    public DirectDebitScheme getDirectDebitScheme() {
         return directDebitScheme;
     }
 
-    public void setDirectDebitScheme(Integer directDebitScheme) {
+    public void setDirectDebitScheme(DirectDebitScheme directDebitScheme) {
         this.directDebitScheme = directDebitScheme;
     }
 
-    public Integer getDirectDebitType() {
+    public DirectDebitType getDirectDebitType() {
         return directDebitType;
     }
 
-    public void setDirectDebitType(Integer directDebitType) {
+    public void setDirectDebitType(DirectDebitType directDebitType) {
         this.directDebitType = directDebitType;
     }
 
