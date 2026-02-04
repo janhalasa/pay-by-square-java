@@ -12,6 +12,7 @@ import io.github.janhalasa.paybysquare.model.Periodicity;
 import io.github.janhalasa.paybysquare.model.StandingOrder;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,13 +25,13 @@ public class PayBySquareGeneratorTest {
         PayBySquareDocument doc = new PayBySquareDocument();
         doc.setInvoiceId("INV-2023-001");
         doc.setBeneficiaryName("Ján Halaša");
-        doc.setBeneficiaryAddress1("Main Street 1");
-        doc.setBeneficiaryAddress2("Bratislava, Slovakia");
+        doc.setBeneficiaryAddress1("P. O. Hviezdoslava 843");
+        doc.setBeneficiaryAddress2("Vyšný Kubín, Slovensko");
 
         // 2. Create a Payment
         Payment payment = new Payment();
         payment.setPaymentOptions(PaymentOption.PAYMENT_ORDER); // This is the default value, not necessary to be set
-        payment.setAmount(123.45);
+        payment.setAmount(new BigDecimal("123.45"));
         payment.setCurrencyCode(Payment.CURRENCY_EUR); // This is the default value, not necessary to be set
         payment.setPaymentDueDate(LocalDate.now());
         payment.setVariableSymbol("1234567890");
@@ -63,7 +64,7 @@ public class PayBySquareGeneratorTest {
         dd.setMandateID("MND-102030");
         dd.setCreditorID("CID-998877");
         dd.setContractID("CTR-554433");
-        dd.setMaxAmount(500.00);
+        dd.setMaxAmount(new BigDecimal(500));
         dd.setValidTillDate(LocalDate.of(2030, 1, 1));
         payment.setDirectDebit(dd);
 
@@ -81,6 +82,6 @@ public class PayBySquareGeneratorTest {
         byte[] qrImage = generator.generateQrCode(doc, 256); // 256x256 pixels
         assertNotNull(qrImage);
         // System.out.println("PayBySquare String: " + stringCode);
-        java.nio.file.Files.write(java.nio.file.Path.of("paybysquare.png"), qrImage);
+        // java.nio.file.Files.write(java.nio.file.Path.of("paybysquare.png"), qrImage);
     }
 }

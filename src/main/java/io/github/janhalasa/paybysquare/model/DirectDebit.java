@@ -1,5 +1,6 @@
 package io.github.janhalasa.paybysquare.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class DirectDebit {
@@ -11,7 +12,7 @@ public class DirectDebit {
     private String mandateID;
     private String creditorID;
     private String contractID;
-    private Double maxAmount;
+    private BigDecimal maxAmount;
     private LocalDate validTillDate;
 
     public DirectDebitScheme getDirectDebitScheme() {
@@ -78,11 +79,11 @@ public class DirectDebit {
         this.contractID = contractID;
     }
 
-    public Double getMaxAmount() {
+    public BigDecimal getMaxAmount() {
         return maxAmount;
     }
 
-    public void setMaxAmount(Double maxAmount) {
+    public void setMaxAmount(BigDecimal maxAmount) {
         this.maxAmount = maxAmount;
     }
 

@@ -1,6 +1,0 @@
-
-// Ceny nie ako double - BigDecimal
-payment.setAmount(123.45);
-dd.setMaxAmount(500.00);
-
-// Vyhodiť zbytočné komentáre

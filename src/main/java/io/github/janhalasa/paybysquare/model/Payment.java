@@ -1,5 +1,6 @@
 package io.github.janhalasa.paybysquare.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ public class Payment {
     public static final String CURRENCY_EUR = "EUR";
 
     private PaymentOption paymentOptions = PaymentOption.PAYMENT_ORDER; // Default
-    private Double amount;
+    private BigDecimal amount;
     private String currencyCode = CURRENCY_EUR;
     private LocalDate paymentDueDate;
     private String variableSymbol;
@@ -29,11 +30,11 @@ public class Payment {
         this.paymentOptions = paymentOptions;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

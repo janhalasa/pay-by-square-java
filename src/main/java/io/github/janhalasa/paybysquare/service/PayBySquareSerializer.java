@@ -6,29 +6,29 @@ import io.github.janhalasa.paybysquare.model.PayBySquareDocument;
 import io.github.janhalasa.paybysquare.model.Payment;
 import io.github.janhalasa.paybysquare.model.StandingOrder;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 public class PayBySquareSerializer {
 
     private static final String SEPARATOR = "\t";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.BASIC_ISO_DATE; // YYYYMMDD format
-    private static final DecimalFormat DECIMAL_FORMAT;
+    static final DecimalFormat DECIMAL_FORMAT;
 
     static {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
-        symbols.setDecimalSeparator('.');
-        DECIMAL_FORMAT = new DecimalFormat("0.##", symbols); // Max 2 decimal places for amount
+        DECIMAL_FORMAT = new DecimalFormat("0.##"); // Max 2 decimal places for amount
         // Note: Spec says 9 decimal places for generic decimal, but amounts usually 2.
         // We will output as is but with dot separator.
         DECIMAL_FORMAT.setMaximumFractionDigits(9);
         DECIMAL_FORMAT.setGroupingUsed(false);
     }
 
+    /**
+     * This method create the structure described in the "Appendix D - data model overview" from the specification.
+     */
     public String serialize(PayBySquareDocument document) {
         StringBuilder sb = new StringBuilder();
 
@@ -174,7 +174,7 @@ public class PayBySquareSerializer {
         sb.append(SEPARATOR);
     }
 
-    private void appendDecimal(StringBuilder sb, Double value) {
+    private void appendDecimal(StringBuilder sb, BigDecimal value) {
         if (value != null) {
             sb.append(DECIMAL_FORMAT.format(value));
         }

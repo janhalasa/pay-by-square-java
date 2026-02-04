@@ -21,8 +21,6 @@ public class PayBySquareGenerator {
 
     public String generateString(PayBySquareDocument document) throws IOException {
         String serialized = serializer.serialize(document);
-        // Debug
-        // System.out.println("Serialized TSV: " + serialized.replace("\t", "[TAB]"));
         return encoder.encode(serialized);
     }
 

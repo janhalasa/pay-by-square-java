@@ -13,9 +13,14 @@ This library provides an implementation of the PayBySquare standard, including:
 
 Reading the resulting QR code or the string it represents, is not implemented (yet).
 
-The library does not validate values set from the business perspective, so if not sure, consult [the standard](https://www.sbaonline.sk/wp-content/uploads/2020/03/pay-by-square-specifications-1_1_0.pdf). 
+### Implementation notes
+
+The library does not validate values set from the business perspective, so if not sure, consult [the standard](https://www.sbaonline.sk/wp-content/uploads/2020/03/pay-by-square-specifications-1_1_0.pdf).
+The API uses the same naming as the standard, so it's easy to find the corresponding section.
 
 ## Installation
+
+### Maven
 
 Add the following dependencies to your `pom.xml`:
 
@@ -27,6 +32,14 @@ Add the following dependencies to your `pom.xml`:
         <version>1.0</version>
     </dependency>
 </dependencies>
+```
+
+### Gradle
+
+```groovy
+dependencies {
+    compile "io.github.janhalasa:pay-by-square-java:1.0"
+}
 ```
 
 The library is tiny, around 15 kB.
@@ -57,7 +70,7 @@ public class OneTimePayment {
 
         // 2. Create a Payment
         Payment payment = new Payment();
-        payment.setAmount(123.45);
+        payment.setAmount(new BigDecimal("123.45"));
         payment.setVariableSymbol("1234567890");
 
         // 3. Add Bank Account (IBAN & BIC)
@@ -71,8 +84,6 @@ public class OneTimePayment {
 
         // 6. Generate the QR Code
         PayBySquareGenerator generator = new PayBySquareGenerator();
-
-        // Generate PNG image
         byte[] qrImage = generator.generateQrCode(doc, 256); // 256x256 pixels
         Files.write(Path.of("paybysquare.png"), qrImage);
     }
@@ -100,13 +111,13 @@ public class FullExample {
         PayBySquareDocument doc = new PayBySquareDocument();
         doc.setInvoiceId("INV-2023-001");
         doc.setBeneficiaryName("Ján Halaša");
-        doc.setBeneficiaryAddress1("P. O. Hviezdoslava 7");
+        doc.setBeneficiaryAddress1("P. O. Hviezdoslava 843");
         doc.setBeneficiaryAddress2("Vyšný Kubín, Slovensko");
 
         // 2. Create a Payment
         Payment payment = new Payment();
         payment.setPaymentOptions(PaymentOption.PAYMENT_ORDER); // This is the default value, not necessary to be set
-        payment.setAmount(123.45);
+        payment.setAmount(new BigDecimal("123.45"));
         payment.setCurrencyCode(Payment.CURRENCY_EUR); // This is the default value, not necessary to be set
         payment.setPaymentDueDate(LocalDate.now());
         payment.setVariableSymbol("1234567890");
@@ -140,7 +151,7 @@ public class FullExample {
         dd.setMandateID("MND-102030");
         dd.setCreditorID("CID-998877");
         dd.setContractID("CTR-554433");
-        dd.setMaxAmount(500.00);
+        dd.setMaxAmount(new BigDecimal(500));
         dd.setValidTillDate(LocalDate.of(2030, 3, 31));
         payment.setDirectDebit(dd);
 
