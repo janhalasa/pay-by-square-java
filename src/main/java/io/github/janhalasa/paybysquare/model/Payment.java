@@ -1,14 +1,14 @@
 package io.github.janhalasa.paybysquare.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Payment {
     private Integer paymentOptions = 1; // Default
     private Double amount;
     private String currencyCode;
-    private Date paymentDueDate;
+    private LocalDate paymentDueDate;
     private String variableSymbol;
     private String constantSymbol;
     private String specificSymbol;
@@ -42,11 +42,11 @@ public class Payment {
         this.currencyCode = currencyCode;
     }
 
-    public Date getPaymentDueDate() {
+    public LocalDate getPaymentDueDate() {
         return paymentDueDate;
     }
 
-    public void setPaymentDueDate(Date paymentDueDate) {
+    public void setPaymentDueDate(LocalDate paymentDueDate) {
         this.paymentDueDate = paymentDueDate;
     }
 

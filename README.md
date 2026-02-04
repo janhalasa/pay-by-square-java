@@ -1,13 +1,17 @@
 # PayBySquare Java Library
 
-A Java library for generating PayBySquare QR codes according to the Slovak PayBySquare standard v1.1.0.
+A Java library for generating PayBySquare QR codes according to the Slovak [PayBySquare standard v1.1.0](https://www.sbaonline.sk/wp-content/uploads/2020/03/pay-by-square-specifications-1_1_0.pdf).
 
 ## Overview
-This library provides a full implementation of the PayBySquare standard, including:
+
+This library provides an implementation of the PayBySquare standard, including:
+
 1.  **Data Modeling**: POJOs for the PayBySquare schema.
 2.  **Serialization**: Conversion to the required tab-separated format.
 3.  **Encoding**: CRC32 checksum, LZMA compression (with specific parameters), bit-stuffing, and Base32hex encoding.
 4.  **QR Generation**: Creating the final QR code image using ZXing.
+
+Reading the resulting QR code or the string it represents, is not implemented (yet).
 
 ## Installation
 
@@ -15,7 +19,6 @@ Add the following dependencies to your `pom.xml`:
 
 ```xml
 <dependencies>
-    <!-- PayBySquare Library (assuming it's built/installed locally for now) -->
     <dependency>
         <groupId>io.github.janhalasa</groupId>
         <artifactId>pay-by-square-java</artifactId>
@@ -30,6 +33,59 @@ The library is tiny, around 15 kB.
 
 Here is a comprehensive example showing how to populate all fields of a `PayBySquareDocument`, including optional symbols, notes, standing orders, and direct debits.
 
+### Simple one-time payment
+
+This is what most people need. It creates a template for a payment identified by a variable symbol.
+
+```java
+
+import io.github.janhalasa.paybysquare.model.BankAccount;
+import io.github.janhalasa.paybysquare.model.PayBySquareDocument;
+import io.github.janhalasa.paybysquare.model.Payment;
+import io.github.janhalasa.paybysquare.service.PayBySquareGenerator;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+
+public class OneTimePayment {
+    public static void main(String[] args) throws Exception {
+        
+        // 1. Create the Document
+        PayBySquareDocument doc = new PayBySquareDocument();
+        doc.setBeneficiaryName("Ján Halaša");
+
+        // 2. Create a Payment
+        Payment payment = new Payment();
+        payment.setPaymentOptions(1); // Standard payment
+        payment.setAmount(123.45);
+        payment.setCurrencyCode("EUR");
+        payment.setVariableSymbol("1234567890");
+
+        // 3. Add Bank Account (IBAN & BIC)
+        BankAccount account = new BankAccount();
+        account.setIban("SK3883300000002503144937");
+        account.setBic("FIOZSKBAXXX");
+        payment.addBankAccount(account);
+        
+        // Add the payment to the document
+        doc.addPayment(payment);
+
+        // 6. Generate the QR Code
+        PayBySquareGenerator generator = new PayBySquareGenerator();
+
+        // Generate PNG image
+        byte[] qrImage = generator.generateQrCode(doc, 256); // 256x256 pixels
+        Files.write(Path.of("paybysquare.png"), qrImage);
+    }
+}
+```
+
+### All available fields
+
+This example showcases the use of all available fields. 
+Some combinantions may not make sense, so it's good to verify how bank apps process the resulting QR code. 
+
 ```java
 
 import io.github.janhalasa.paybysquare.model.BankAccount;
@@ -41,28 +97,29 @@ import io.github.janhalasa.paybysquare.service.PayBySquareGenerator;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
-public class Example {
+public class FullExample {
     public static void main(String[] args) throws Exception {
+        
         // 1. Create the Document
         PayBySquareDocument doc = new PayBySquareDocument();
         doc.setInvoiceId("INV-2023-001");
         doc.setBeneficiaryName("Ján Halaša");
-        doc.setBeneficiaryAddress1("Main Street 1");
-        doc.setBeneficiaryAddress2("Bratislava, Slovakia");
+        doc.setBeneficiaryAddress1("P. O. Hviezdoslava 7");
+        doc.setBeneficiaryAddress2("Vyšný Kubín, Slovensko");
 
         // 2. Create a Payment
         Payment payment = new Payment();
         payment.setPaymentOptions(1); // Standard payment
         payment.setAmount(123.45);
         payment.setCurrencyCode("EUR");
-        payment.setPaymentDueDate(new Date()); // Today
+        payment.setPaymentDueDate(LocalDate.now());
         payment.setVariableSymbol("1234567890");
         payment.setConstantSymbol("0308");
         payment.setSpecificSymbol("9999");
-        payment.setOriginatorsReference("REF-123-ABC");
+        // This reference replaces the symbols above - use one or the other
+        payment.setOriginatorsReference("/VS12345/SS9999/KS0008");
         payment.setPaymentNote("Payment for Invoice 001 - Full Service");
 
         // 3. Add Bank Account (IBAN & BIC)
@@ -76,7 +133,7 @@ public class Example {
         so.setDay(15);
         so.setMonth(1); // Every month (1) or specific month? Check standard. Usually interval.
         so.setPeriodicity("M"); // Monthly
-        so.setLastDate(new GregorianCalendar(2025, Calendar.DECEMBER, 31).getTime()); // Dec 31, 2025
+        so.setLastDate(LocalDate.of(2027, 12, 1));
         payment.setStandingOrder(so);
 
         // 5. (Optional) Add Direct Debit details
@@ -90,7 +147,7 @@ public class Example {
         dd.setCreditorID("CID-998877");
         dd.setContractID("CTR-554433");
         dd.setMaxAmount(500.00);
-        dd.setValidTillDate(new GregorianCalendar(2030, Calendar.JANUARY, 1).getTime());
+        dd.setValidTillDate(LocalDate.of(2030, 3, 31));
         payment.setDirectDebit(dd);
 
         // Add the payment to the document
@@ -100,13 +157,13 @@ public class Example {
         PayBySquareGenerator generator = new PayBySquareGenerator();
 
         // Generate raw PayBySquare string (LZMA compressed, Base32hex encoded)
+        // This is useful if you want to use a different library for generating the QR code
         String stringCode = generator.generateString(doc);
         System.out.println("PayBySquare String: " + stringCode);
 
         // Generate PNG image
         byte[] qrImage = generator.generateQrCode(doc, 256); // 256x256 pixels
         Files.write(Path.of("paybysquare.png"), qrImage);
-        System.out.println("QR Code saved to paybysquare.png");
     }
 }
 ```
@@ -118,6 +175,11 @@ public class Example {
 - **`PayBySquareEncoder`**: Handles CRC32, LZMA compression, custom header construction, and Base32hex encoding.
 - **`PayBySquareGenerator`**: The main entry point for generating QR codes.
 
+## Testing
+
+Since the library supports just generation of QR codes, it's a bit hard to verify the result in a JUnit test.
+So it's necessary to test the result in an existing bank application or another PayBySquare library.
+
 ## Standard Compliance
 - **Version**: [1.1.0](https://www.sbaonline.sk/wp-content/uploads/2020/03/pay-by-square-specifications-1_1_0.pdf)
 - **Compression**: LZMA (LC=3, LP=0, PB=2, Dictionary=128KB)
@@ -126,4 +188,5 @@ public class Example {
 - **QR Code**: ISO/IEC 18004:2006, Alphanumeric Mode, Error Correction Level L
 
 ## License
+
 MIT

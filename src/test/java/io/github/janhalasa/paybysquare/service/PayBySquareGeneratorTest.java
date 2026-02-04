@@ -7,9 +7,7 @@ import io.github.janhalasa.paybysquare.model.Payment;
 import io.github.janhalasa.paybysquare.model.StandingOrder;
 import org.junit.jupiter.api.Test;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -29,11 +27,11 @@ public class PayBySquareGeneratorTest {
         payment.setPaymentOptions(1); // Standard payment
         payment.setAmount(123.45);
         payment.setCurrencyCode("EUR");
-        payment.setPaymentDueDate(new Date());
+        payment.setPaymentDueDate(LocalDate.now());
         payment.setVariableSymbol("1234567890");
-        payment.setConstantSymbol("0308");
+        payment.setConstantSymbol("0008");
         payment.setSpecificSymbol("9999");
-        payment.setOriginatorsReference("REF-123-ABC");
+        // payment.setOriginatorsReference("/VS12345/SS9999/KS0008");
         payment.setPaymentNote("Payment for Invoice 001 - Full Service");
 
         // 3. Add Bank Account (IBAN & BIC)
@@ -47,7 +45,7 @@ public class PayBySquareGeneratorTest {
         so.setDay(15);
         so.setMonth(1); // Every month (1) or specific month? Check standard. Usually interval.
         so.setPeriodicity("M"); // Monthly
-        so.setLastDate(new GregorianCalendar(2025, Calendar.DECEMBER, 31).getTime()); // Dec 31, 2025
+        so.setLastDate(LocalDate.of(2025, 12, 31)); // Dec 31, 2025
         payment.setStandingOrder(so);
 
         // 5. (Optional) Add Direct Debit details
@@ -61,7 +59,7 @@ public class PayBySquareGeneratorTest {
         dd.setCreditorID("CID-998877");
         dd.setContractID("CTR-554433");
         dd.setMaxAmount(500.00);
-        dd.setValidTillDate(new GregorianCalendar(2030, Calendar.JANUARY, 1).getTime());
+        dd.setValidTillDate(LocalDate.of(2030, 1, 1));
         payment.setDirectDebit(dd);
 
         // Add the payment to the document
@@ -78,6 +76,6 @@ public class PayBySquareGeneratorTest {
         byte[] qrImage = generator.generateQrCode(doc, 256); // 256x256 pixels
         assertNotNull(qrImage);
         // System.out.println("PayBySquare String: " + stringCode);
-        // Files.write(Path.of("paybysquare.png"), qrImage);
+        java.nio.file.Files.write(java.nio.file.Path.of("paybysquare.png"), qrImage);
     }
 }

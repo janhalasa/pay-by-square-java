@@ -1,6 +1,6 @@
 package io.github.janhalasa.paybysquare.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class DirectDebit {
     private Integer directDebitScheme;
@@ -12,7 +12,7 @@ public class DirectDebit {
     private String creditorID;
     private String contractID;
     private Double maxAmount;
-    private Date validTillDate;
+    private LocalDate validTillDate;
 
     public Integer getDirectDebitScheme() {
         return directDebitScheme;
@@ -86,11 +86,11 @@ public class DirectDebit {
         this.maxAmount = maxAmount;
     }
 
-    public Date getValidTillDate() {
+    public LocalDate getValidTillDate() {
         return validTillDate;
     }
 
-    public void setValidTillDate(Date validTillDate) {
+    public void setValidTillDate(LocalDate validTillDate) {
         this.validTillDate = validTillDate;
     }
 }

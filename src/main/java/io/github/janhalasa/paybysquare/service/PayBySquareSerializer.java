@@ -8,15 +8,15 @@ import io.github.janhalasa.paybysquare.model.StandingOrder;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
 public class PayBySquareSerializer {
 
     private static final String SEPARATOR = "\t";
-    private static final String DATE_FORMAT = "yyyyMMdd";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.BASIC_ISO_DATE; // YYYYMMDD format
     private static final DecimalFormat DECIMAL_FORMAT;
 
     static {
@@ -181,10 +181,9 @@ public class PayBySquareSerializer {
         sb.append(SEPARATOR);
     }
 
-    private void appendDate(StringBuilder sb, Date value) {
+    private void appendDate(StringBuilder sb, LocalDate value) {
         if (value != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-            sb.append(sdf.format(value));
+            sb.append(DATE_FORMATTER.format(value));
         }
         sb.append(SEPARATOR);
     }

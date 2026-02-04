@@ -1,12 +1,12 @@
 package io.github.janhalasa.paybysquare.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class StandingOrder {
     private Integer day;
     private Integer month;
     private String periodicity;
-    private Date lastDate;
+    private LocalDate lastDate;
 
     public Integer getDay() {
         return day;
@@ -32,11 +32,11 @@ public class StandingOrder {
         this.periodicity = periodicity;
     }
 
-    public Date getLastDate() {
+    public LocalDate getLastDate() {
         return lastDate;
     }
 
-    public void setLastDate(Date lastDate) {
+    public void setLastDate(LocalDate lastDate) {
         this.lastDate = lastDate;
     }
 }
