@@ -13,6 +13,12 @@ This library provides an implementation of the PayBySquare standard, including:
 
 Reading the resulting QR code or the string it represents, is not implemented (yet).
 
+### Sample output
+
+The library doesn't support any styling, just a bare QR code.
+
+![Sample QR code](paybysquare.png)
+
 ### Implementation notes
 
 The library does not validate values set from the business perspective, so if not sure, consult [the standard](https://www.sbaonline.sk/wp-content/uploads/2020/03/pay-by-square-specifications-1_1_0.pdf).

@@ -32,7 +32,7 @@ public class PayBySquareGenerator {
     public byte[] generateQrCodeFromCode(String code, int size) throws IOException, WriterException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         Map<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);
-        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8"); // Content is Base32, so ASCII, but UTF-8 is safe default
         hints.put(EncodeHintType.MARGIN, 0); // Optional: Minimal margin
 
