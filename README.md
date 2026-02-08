@@ -2,6 +2,8 @@
 
 A Java library for generating PayBySquare QR codes according to the Slovak [PayBySquare standard v1.1.0](https://www.sbaonline.sk/wp-content/uploads/2020/03/pay-by-square-specifications-1_1_0.pdf).
 
+If you like this library, please give it a star, so I know someone uses it.
+
 ## Overview
 
 This library provides an implementation of the PayBySquare standard, including:
